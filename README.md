@@ -1,10 +1,13 @@
 # OpsPulse — Employee Performance & Departmental KPI Tracker
 
+[![Live Dashboard](https://img.shields.io/badge/Live%20Dashboard-GitHub%20Pages-0EA5E9?style=flat-square)](https://madhesh0067.github.io/opspulse-kpi-tracker/dashboard/)
 [![Tools](https://img.shields.io/badge/Tools-MS%20Excel%20%7C%20Google%20Sheets%20%7C%20Power%20BI%20%7C%20SQL-2563EB?style=flat-square)](#architecture)
 [![Python](https://img.shields.io/badge/Automation-Python%203.12-10B981?style=flat-square)](#quickstart)
 [![License: MIT](https://img.shields.io/badge/License-MIT-0F172A?style=flat-square)](./LICENSE)
 
 **OpsPulse** is an end-to-end centralized employee performance and departmental KPI tracking system built across **SQL, MS Excel, Google Sheets (Apps Script), and Power BI**. It monitors **task completion rates, turnaround times, SLA compliance, composite productivity indices, operational delays, and overdue milestones** across 6 enterprise departments and 48 employees over 46 ISO weeks (2026 YTD), automatically generating weekly performance scorecards and executive summary dashboards for leadership.
+
+> **Interactive Executive Dashboard:** [Launch Live OpsPulse Dashboard](https://madhesh0067.github.io/opspulse-kpi-tracker/dashboard/)
 
 ---
 
