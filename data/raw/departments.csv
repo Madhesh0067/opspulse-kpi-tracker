@@ -1,0 +1,7 @@
+department_id,department_name,department_head,cost_center,target_completion_pct,target_sla_hours,target_ontime_pct,monthly_budget_usd
+DEPT-ENG,Engineering,Arjun Raghavan,CC-101,88.0,36.0,80.0,145000
+DEPT-OPS,Operations & Logistics,Meera Krishnan,CC-102,90.0,24.0,82.0,112000
+DEPT-SUP,Customer Support,Karthik Subramanian,CC-103,92.0,12.0,84.0,78000
+DEPT-FIN,Finance & Compliance,Ananya Iyer,CC-104,91.0,28.0,82.0,84000
+DEPT-PRD,Product & Design,Rohan Deshmukh,CC-105,87.0,32.0,80.0,96000
+DEPT-SLS,Sales & Partnerships,Divya Nair,CC-106,89.0,20.0,82.0,105000

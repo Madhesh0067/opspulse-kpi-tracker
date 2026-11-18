@@ -1,0 +1,7 @@
+department_id,department_name,department_head,target_completion_pct,target_sla_hours,target_ontime_pct,active_employees,total_tasks,completed_tasks,overdue_tasks,blocked_tasks,completion_rate_pct,completion_variance_pct,on_time_rate_pct,sla_compliance_pct,avg_turnaround_hrs,total_delay_hrs,avg_delay_when_delayed_hrs,avg_quality_score,rework_rate_pct,rag_status
+DEPT-OPS,Operations & Logistics,Meera Krishnan,90.0,24.0,82.0,8,429,336,67,24,78.32,-11.68,65.18,58.63,23.04,8159.4,35.63,4.04,8.63,Red
+DEPT-SLS,Sales & Partnerships,Divya Nair,89.0,20.0,82.0,8,418,354,49,15,84.69,-4.31,80.23,76.55,16.19,5305.5,38.45,4.35,6.5,Amber
+DEPT-FIN,Finance & Compliance,Ananya Iyer,91.0,28.0,82.0,8,461,401,43,17,86.98,-4.02,83.54,80.05,22.64,5349.2,39.05,4.6,4.74,Amber
+DEPT-SUP,Customer Support,Karthik Subramanian,92.0,12.0,84.0,8,382,359,15,8,93.98,1.98,94.15,89.14,8.74,1849.6,33.03,4.5,3.06,Green
+DEPT-PRD,Product & Design,Rohan Deshmukh,87.0,32.0,80.0,8,389,347,28,13,89.2,2.2,84.44,80.69,24.17,3769.1,37.69,4.38,5.19,Green
+DEPT-ENG,Engineering,Arjun Raghavan,88.0,36.0,80.0,8,395,371,12,11,93.92,5.92,84.37,83.02,27.19,2655.9,31.62,4.53,5.93,Green

@@ -1,0 +1,12 @@
+milestone_id,milestone_name,department_name,owner_name,quarter,priority,planned_due_date,status,completion_pct,days_past_due,linked_tasks,open_delayed_tasks,accumulated_delay_hrs,blocker_summary
+MS-009,Warehouse Barcode Automation,Operations & Logistics,Deepak Joshi,2026-Q3,Critical,2026-09-15,Overdue,85.5,64,75,25,2185.1,Tier-2 carrier SLA slippage and scanner hardware backorder.
+MS-004,Microservices Telemetry Rollout,Engineering,Aarav Sharma,2026-Q3,Critical,2026-09-25,Overdue,70.0,54,102,2,541.5,Blocked on legacy schema freeze & cross-team API contract sign-off.
+MS-010,Q3 Carrier Bottleneck Recovery,Operations & Logistics,Rahul Nair,2026-Q3,Critical,2026-10-10,Overdue,78.3,39,65,21,1781.7,Tier-2 carrier SLA slippage and scanner hardware backorder.
+MS-022,Procurement Approval Workflow v3,Finance & Compliance,Gautam Sinha,2026-Q3,Critical,2026-10-22,Overdue,70.3,27,72,9,778.7,Waiting on multi-level VP approval workflows and external auditor sample list.
+MS-005,Zero-Downtime DB Failover Drill,Engineering,Neha Patel,2026-Q4,Critical,2026-10-30,Overdue,66.6,19,22,0,25.4,Blocked on legacy schema freeze & cross-team API contract sign-off.
+MS-023,SOC2 Control Evidence Refresh,Finance & Compliance,Revathi Srinivasan,2026-Q4,Critical,2026-11-08,Overdue,84.3,10,38,5,498.4,Waiting on multi-level VP approval workflows and external auditor sample list.
+MS-035,APAC Channel Expansion Launch,Sales & Partnerships,Shreya Bhattacharya,2026-Q4,Critical,2026-11-25,At Risk,46.5,-7,20,2,119.9,Legal redline queue backlog on enterprise renewal templates.
+MS-012,Peak-Season Capacity Readiness,Operations & Logistics,Deepak Joshi,2026-Q4,Critical,2026-11-28,At Risk,58.8,-10,34,3,201.1,Tier-2 carrier SLA slippage and scanner hardware backorder.
+MS-028,Executive Mobile Dashboard Specs,Product & Design,Aditi Kulkarni,2026-Q3,High,2026-10-18,Overdue,73.0,31,60,7,618.0,Design handoff delayed by shifting executive dashboard KPI definitions.
+MS-034,Renewal Risk Playbook Rollout,Sales & Partnerships,Raghavendra Rao,2026-Q4,High,2026-11-04,Overdue,69.9,14,26,0,84.3,Legal redline queue backlog on enterprise renewal templates.
+MS-011,Cold-Chain Audit Compliance,Operations & Logistics,Pooja Sundaram,2026-Q4,High,2026-11-05,Overdue,76.0,13,24,1,117.2,Tier-2 carrier SLA slippage and scanner hardware backorder.

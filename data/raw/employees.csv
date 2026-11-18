@@ -1,0 +1,49 @@
+employee_id,full_name,email,department_id,role_title,seniority_level,location,hire_date,weekly_capacity_hrs,status
+EMP-001,Aarav Sharma,aarav.sharma@opspulse.io,DEPT-ENG,Backend Engineer,Lead,Chennai,2024-06-17,40.0,Active
+EMP-002,Neha Patel,neha.patel@opspulse.io,DEPT-ENG,Data Engineer,Senior,Hyderabad,2021-07-18,40.0,Active
+EMP-003,Vikram Menon,vikram.menon@opspulse.io,DEPT-ENG,DevOps Engineer,Senior,Remote,2024-10-04,40.0,Active
+EMP-004,Sneha Reddy,sneha.reddy@opspulse.io,DEPT-ENG,QA Automation Engineer,Mid,Bengaluru,2023-05-12,40.0,Active
+EMP-005,Siddharth Verma,siddharth.verma@opspulse.io,DEPT-ENG,Senior Software Engineer,Mid,Pune,2023-05-18,40.0,Active
+EMP-006,Kavya Narayanan,kavya.narayanan@opspulse.io,DEPT-ENG,Tech Lead,Mid,Chennai,2024-03-26,40.0,Active
+EMP-007,Pranav Kulkarni,pranav.kulkarni@opspulse.io,DEPT-ENG,Backend Engineer,Junior,Hyderabad,2022-01-16,40.0,Active
+EMP-008,Ishita Banerjee,ishita.banerjee@opspulse.io,DEPT-ENG,Data Engineer,Junior,Remote,2025-05-02,40.0,Active
+EMP-009,Rahul Nair,rahul.nair@opspulse.io,DEPT-OPS,Operations Analyst,Lead,Pune,2025-01-06,40.0,Active
+EMP-010,Pooja Sundaram,pooja.sundaram@opspulse.io,DEPT-OPS,Supply Chain Coordinator,Senior,Chennai,2023-12-02,40.0,Active
+EMP-011,Deepak Joshi,deepak.joshi@opspulse.io,DEPT-OPS,Fulfillment Specialist,Senior,Hyderabad,2023-02-22,40.0,Active
+EMP-012,Lakshmi Venkatesh,lakshmi.venkatesh@opspulse.io,DEPT-OPS,Process Lead,Mid,Remote,2023-05-05,40.0,Active
+EMP-013,Harish Gowda,harish.gowda@opspulse.io,DEPT-OPS,Logistics Planner,Mid,Bengaluru,2024-11-27,40.0,Active
+EMP-014,Shruti Malhotra,shruti.malhotra@opspulse.io,DEPT-OPS,Inventory Analyst,Mid,Pune,2024-04-18,40.0,Active
+EMP-015,Nikhil Tiwari,nikhil.tiwari@opspulse.io,DEPT-OPS,Operations Analyst,Junior,Chennai,2023-08-28,40.0,Active
+EMP-016,Anjali Menon,anjali.menon@opspulse.io,DEPT-OPS,Supply Chain Coordinator,Junior,Hyderabad,2024-12-31,40.0,Active
+EMP-017,Manoj Kumar,manoj.kumar@opspulse.io,DEPT-SUP,Support Specialist,Lead,Bengaluru,2025-02-25,40.0,Active
+EMP-018,Swathi Raj,swathi.raj@opspulse.io,DEPT-SUP,Technical Support Engineer,Senior,Pune,2023-11-26,40.0,Active
+EMP-019,Varun Choudhary,varun.choudhary@opspulse.io,DEPT-SUP,Escalation Lead,Senior,Chennai,2025-01-15,40.0,Active
+EMP-020,Keerthi Selvam,keerthi.selvam@opspulse.io,DEPT-SUP,CX Analyst,Mid,Hyderabad,2021-08-30,40.0,Active
+EMP-021,Rakesh Pillai,rakesh.pillai@opspulse.io,DEPT-SUP,Onboarding Specialist,Mid,Remote,2022-11-19,40.0,Active
+EMP-022,Nandini Rao,nandini.rao@opspulse.io,DEPT-SUP,Senior Support Associate,Mid,Bengaluru,2021-12-31,40.0,Active
+EMP-023,Suresh Babu,suresh.babu@opspulse.io,DEPT-SUP,Support Specialist,Junior,Pune,2023-11-10,40.0,Active
+EMP-024,Preethi Mohan,preethi.mohan@opspulse.io,DEPT-SUP,Technical Support Engineer,Junior,Chennai,2022-03-12,40.0,Active
+EMP-025,Gautam Sinha,gautam.sinha@opspulse.io,DEPT-FIN,Financial Analyst,Lead,Remote,2023-12-01,40.0,Active
+EMP-026,Revathi Srinivasan,revathi.srinivasan@opspulse.io,DEPT-FIN,Compliance Auditor,Senior,Bengaluru,2024-10-23,40.0,Active
+EMP-027,Abhishek Mishra,abhishek.mishra@opspulse.io,DEPT-FIN,AP/AR Specialist,Senior,Pune,2021-09-17,40.0,Active
+EMP-028,Priya Balasubramanian,priya.balasubramanian@opspulse.io,DEPT-FIN,Tax Operations Analyst,Mid,Chennai,2022-10-13,40.0,Active
+EMP-029,Kiran Deshpande,kiran.deshpande@opspulse.io,DEPT-FIN,Risk Controller,Mid,Hyderabad,2024-12-06,40.0,Active
+EMP-030,Bhavna Kapoor,bhavna.kapoor@opspulse.io,DEPT-FIN,Senior Finance Lead,Mid,Remote,2021-12-17,40.0,Active
+EMP-031,Tarun Agarwal,tarun.agarwal@opspulse.io,DEPT-FIN,Financial Analyst,Junior,Bengaluru,2022-01-09,40.0,Active
+EMP-032,Meghna Das,meghna.das@opspulse.io,DEPT-FIN,Compliance Auditor,Junior,Pune,2022-05-27,40.0,Active
+EMP-033,Aditi Kulkarni,aditi.kulkarni@opspulse.io,DEPT-PRD,Product Analyst,Lead,Hyderabad,2021-12-01,40.0,Active
+EMP-034,Rishabh Mehta,rishabh.mehta@opspulse.io,DEPT-PRD,UI/UX Designer,Senior,Remote,2022-06-04,40.0,Active
+EMP-035,Tanvi Shah,tanvi.shah@opspulse.io,DEPT-PRD,Product Manager,Senior,Bengaluru,2021-11-16,40.0,Active
+EMP-036,Vivek Natarajan,vivek.natarajan@opspulse.io,DEPT-PRD,UX Researcher,Mid,Pune,2022-09-29,40.0,Active
+EMP-037,Simran Kaur,simran.kaur@opspulse.io,DEPT-PRD,Design Systems Lead,Mid,Chennai,2022-06-15,40.0,Active
+EMP-038,Akash Chatterjee,akash.chatterjee@opspulse.io,DEPT-PRD,Associate PM,Mid,Hyderabad,2023-05-11,40.0,Active
+EMP-039,Niharika Verma,niharika.verma@opspulse.io,DEPT-PRD,Product Analyst,Junior,Remote,2024-09-01,40.0,Active
+EMP-040,Devansh Gupta,devansh.gupta@opspulse.io,DEPT-PRD,UI/UX Designer,Junior,Bengaluru,2024-07-18,40.0,Active
+EMP-041,Raghavendra Rao,raghavendra.rao@opspulse.io,DEPT-SLS,Account Executive,Lead,Chennai,2024-10-10,40.0,Active
+EMP-042,Shreya Bhattacharya,shreya.bhattacharya@opspulse.io,DEPT-SLS,Revenue Ops Analyst,Senior,Hyderabad,2023-05-08,40.0,Active
+EMP-043,Kunal Khanna,kunal.khanna@opspulse.io,DEPT-SLS,Partnerships Manager,Senior,Remote,2025-03-03,40.0,Active
+EMP-044,Aishwarya Iyer,aishwarya.iyer@opspulse.io,DEPT-SLS,Sales Operations Specialist,Mid,Bengaluru,2024-11-05,40.0,Active
+EMP-045,Sandeep Hegde,sandeep.hegde@opspulse.io,DEPT-SLS,Enterprise SDR,Mid,Pune,2024-10-26,40.0,Active
+EMP-046,Pallavi Joshi,pallavi.joshi@opspulse.io,DEPT-SLS,Deal Desk Lead,Mid,Chennai,2024-06-22,40.0,Active
+EMP-047,Yashwant Singh,yashwant.singh@opspulse.io,DEPT-SLS,Account Executive,Junior,Hyderabad,2022-11-29,40.0,Active
+EMP-048,Ritika Bose,ritika.bose@opspulse.io,DEPT-SLS,Revenue Ops Analyst,Junior,Remote,2022-10-07,40.0,Active

@@ -1,0 +1,253 @@
+-- ============================================================================
+-- OpsPulse — Employee Performance & Departmental KPI Tracker
+-- File: kpi_measures.dax
+-- Description: Production DAX measure library for Power BI Executive Dashboard
+-- ============================================================================
+
+-------------------------------------------------------------------------------
+-- 01. CORE VOLUME & WORKLOAD MEASURES
+-------------------------------------------------------------------------------
+
+Total Tasks =
+COUNTROWS ( FactTasks )
+
+Completed Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "Completed"
+)
+
+In Progress Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "In Progress"
+)
+
+Overdue Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "Overdue"
+)
+
+Blocked Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "Blocked"
+)
+
+Active Employees =
+DISTINCTCOUNT ( FactTasks[employee_id] )
+
+Tasks per Employee =
+DIVIDE ( [Total Tasks], [Active Employees], 0 )
+
+Total Actual Hours =
+SUM ( FactTasks[actual_hours] )
+
+Total Estimated Hours =
+SUM ( FactTasks[estimated_hours] )
+
+-------------------------------------------------------------------------------
+-- 02. COMPLETION, ON-TIME DELIVERY & SLA COMPLIANCE
+-------------------------------------------------------------------------------
+
+Completion Rate % =
+DIVIDE ( [Completed Tasks], [Total Tasks], 0 )
+
+Target Completion Rate % =
+DIVIDE ( AVERAGE ( DimDepartments[target_completion_pct] ), 100, 0 )
+
+Completion Variance vs Target =
+[Completion Rate %] - [Target Completion Rate %]
+
+On-Time Completed Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "Completed",
+    FactTasks[completed_date] <= FactTasks[due_date]
+)
+
+On-Time Delivery % =
+DIVIDE ( [On-Time Completed Tasks], [Completed Tasks], 0 )
+
+SLA Met Tasks =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[status] = "Completed",
+    FactTasks[turnaround_hours] <= FactTasks[sla_hours]
+)
+
+SLA Compliance % =
+DIVIDE ( [SLA Met Tasks], [Completed Tasks], 0 )
+
+SLA Breach Rate % =
+1 - [SLA Compliance %]
+
+-------------------------------------------------------------------------------
+-- 03. TURNAROUND, QUALITY & PRODUCTIVITY INDEX
+-------------------------------------------------------------------------------
+
+Avg Turnaround Hours =
+CALCULATE (
+    AVERAGE ( FactTasks[turnaround_hours] ),
+    FactTasks[status] = "Completed"
+)
+
+Target SLA Hours =
+AVERAGE ( DimDepartments[target_sla_hours] )
+
+Turnaround Variance vs SLA (Hrs) =
+[Avg Turnaround Hours] - [Target SLA Hours]
+
+Estimation Accuracy % =
+DIVIDE ( [Total Estimated Hours], [Total Actual Hours], 0 )
+
+Avg Quality Score =
+CALCULATE (
+    AVERAGE ( FactTasks[quality_score] ),
+    FactTasks[status] = "Completed"
+)
+
+Rework Rate % =
+DIVIDE (
+    CALCULATE ( SUM ( FactTasks[rework_flag] ), FactTasks[status] = "Completed" ),
+    [Completed Tasks],
+    0
+)
+
+First-Pass Yield % =
+1 - [Rework Rate %]
+
+Productivity Index (0-100) =
+VAR _CompScore = [Completion Rate %] * 100
+VAR _SLAScore  = [SLA Compliance %] * 100
+VAR _QualScore = [Avg Quality Score] * 20
+VAR _FPYScore  = [First-Pass Yield %] * 100
+RETURN
+    ROUND (
+        0.35 * _CompScore +
+        0.30 * _SLAScore +
+        0.20 * _QualScore +
+        0.15 * _FPYScore,
+        2
+    )
+
+Employee Org Rank =
+RANKX (
+    ALLSELECTED ( DimEmployees[full_name] ),
+    [Productivity Index (0-100)],
+    ,
+    DESC,
+    DENSE
+)
+
+-------------------------------------------------------------------------------
+-- 04. OPERATIONAL DELAYS & BOTTLENECK PARETO
+-------------------------------------------------------------------------------
+
+Total Delay Hours =
+SUM ( FactTasks[delay_hours] )
+
+Delayed Task Count =
+CALCULATE (
+    COUNTROWS ( FactTasks ),
+    FactTasks[delay_hours] > 0
+)
+
+Delay Incident Rate % =
+DIVIDE ( [Delayed Task Count], [Total Tasks], 0 )
+
+Avg Delay Hours (Delayed Tasks) =
+CALCULATE (
+    AVERAGE ( FactTasks[delay_hours] ),
+    FactTasks[delay_hours] > 0
+)
+
+Delay Hours Share % =
+DIVIDE (
+    [Total Delay Hours],
+    CALCULATE ( [Total Delay Hours], ALLSELECTED ( FactTasks[delay_reason] ) ),
+    0
+)
+
+Delay Pareto Cumulative % =
+VAR _CurrentReasonDelay = [Total Delay Hours]
+VAR _AllDelay =
+    CALCULATE ( [Total Delay Hours], ALLSELECTED ( FactTasks[delay_reason] ) )
+VAR _CumulativeDelay =
+    CALCULATE (
+        [Total Delay Hours],
+        FILTER (
+            ALLSELECTED ( FactTasks[delay_reason] ),
+            [Total Delay Hours] >= _CurrentReasonDelay
+        )
+    )
+RETURN
+    DIVIDE ( _CumulativeDelay, _AllDelay, 0 )
+
+-------------------------------------------------------------------------------
+-- 05. TIME INTELLIGENCE (WEEK-OVER-WEEK & 4-WEEK ROLLING)
+-------------------------------------------------------------------------------
+
+Prior Week Completion Rate % =
+VAR _CurrentWeek = MAX ( DimDate[YearWeekNum] )
+RETURN
+    CALCULATE (
+        [Completion Rate %],
+        FILTER (
+            ALL ( DimDate ),
+            DimDate[YearWeekNum] = _CurrentWeek - 1
+        )
+    )
+
+WoW Completion Delta =
+[Completion Rate %] - [Prior Week Completion Rate %]
+
+Rolling 4-Week Completion Rate % =
+VAR _MaxDate = MAX ( DimDate[Date] )
+RETURN
+    CALCULATE (
+        [Completion Rate %],
+        DATESINPERIOD ( DimDate[Date], _MaxDate, -28, DAY )
+    )
+
+Rolling 4-Week Turnaround Hrs =
+VAR _MaxDate = MAX ( DimDate[Date] )
+RETURN
+    CALCULATE (
+        [Avg Turnaround Hours],
+        DATESINPERIOD ( DimDate[Date], _MaxDate, -28, DAY )
+    )
+
+-------------------------------------------------------------------------------
+-- 06. MILESTONE ESCALATIONS & RAG CONDITIONAL FORMATTING
+-------------------------------------------------------------------------------
+
+Overdue Milestones =
+CALCULATE (
+    COUNTROWS ( DimMilestones ),
+    DimMilestones[status] = "Overdue"
+)
+
+At-Risk Milestones =
+CALCULATE (
+    COUNTROWS ( DimMilestones ),
+    DimMilestones[status] = "At Risk"
+)
+
+Executive RAG Color =
+SWITCH (
+    TRUE (),
+    [Completion Rate %] >= [Target Completion Rate %] && [SLA Compliance %] >= 0.82, "#10B981",
+    [Completion Rate %] >= [Target Completion Rate %] - 0.05, "#F59E0B",
+    "#EF4444"
+)
+
+Performance Tier Label =
+SWITCH (
+    TRUE (),
+    [Productivity Index (0-100)] >= 88, "Top Performer",
+    [Productivity Index (0-100)] >= 80, "Exceeds Target",
+    [Productivity Index (0-100)] >= 72, "On Track",
+    "Needs Support"
+)

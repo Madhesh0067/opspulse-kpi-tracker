@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpsPulse — Executive Performance & Departmental KPI Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --slate: #1e293b;
+      --muted: #64748b;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --blue: #2563eb;
+      --sky: #0ea5e9;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      line-height: 1.45;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #fff;
+      padding: 20px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+    }
+    .brand h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .brand p { font-size: 13px; color: #cbd5e1; margin-top: 2px; }
+    .slicers { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .slicer-group { display: flex; flex-direction: column; gap: 3px; }
+    .slicer-group label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; font-weight: 600; }
+    select {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    select option { color: var(--navy); background: #fff; }
+    .reset-btn {
+      margin-top: 14px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .reset-btn:hover { background: #1d4ed8; }
+    nav.tabs {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 13px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    main { max-width: 1420px; margin: 22px auto; padding: 0 24px 40px; }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+      border-top: 3px solid var(--blue);
+    }
+    .kpi-card.green { border-top-color: var(--green); }
+    .kpi-card.amber { border-top-color: var(--amber); }
+    .kpi-card.red { border-top-color: var(--red); }
+    .kpi-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+    .kpi-value { font-size: 27px; font-weight: 700; margin: 5px 0 3px; color: var(--navy); }
+    .kpi-sub { font-size: 12px; color: var(--muted); }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+      margin-bottom: 18px;
+    }
+    .panel h2 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .panel .subtitle { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    .chart-wrap { position: relative; height: 300px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left;
+      background: #f8fafc;
+      color: var(--slate);
+      font-weight: 700;
+      padding: 10px 10px;
+      border-bottom: 2px solid var(--border);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    td { padding: 9px 10px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: #f8fafc; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge.green { background: #dcfce7; color: #166534; }
+    .badge.amber { background: #fef3c7; color: #92400e; }
+    .badge.red { background: #fee2e2; color: #991b1b; }
+    .badge.blue { background: #dbeafe; color: #1e40af; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .search-input {
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      width: 260px;
+      margin-bottom: 12px;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 12px 0 28px;
+    }
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>OpsPulse — Employee Performance & Departmental KPI Dashboard</h1>
+      <p>Executive Command Center (2026) · Powered by SQL Warehouse + Excel/Sheets + Power BI Data Model</p>
+    </div>
+    <div class="slicers">
+      <div class="slicer-group">
+        <label for="fDept">Department</label>
+        <select id="fDept"><option value="ALL">All Departments</option></select>
+      </div>
+      <div class="slicer-group">
+        <label for="fQuarter">Quarter</label>
+        <select id="fQuarter">
+          <option value="ALL">All 2026 Quarters</option>
+          <option value="2026-Q1">2026-Q1</option>
+          <option value="2026-Q2">2026-Q2</option>
+          <option value="2026-Q3">2026-Q3</option>
+          <option value="2026-Q4">2026-Q4</option>
+        </select>
+      </div>
+      <div class="slicer-group">
+        <label for="fPriority">Priority</label>
+        <select id="fPriority">
+          <option value="ALL">All Priorities</option>
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <button class="reset-btn" id="resetBtn">Reset Filters</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="overview">1. Executive Command Center</button>
+    <button class="tab-btn" data-tab="departments">2. Departmental KPIs & Bottlenecks</button>
+    <button class="tab-btn" data-tab="employees">3. Employee Productivity Leaderboard</button>
+    <button class="tab-btn" data-tab="milestones">4. Overdue Milestones & Escalations</button>
+  </nav>
+
+  <main>
+    <section class="kpi-grid" id="kpiCards"></section>
+
+    <!-- TAB 1: OVERVIEW -->
+    <div class="section active" id="tab-overview">
+      <div class="grid-2">
+        <div class="panel">
+          <h2>Weekly Completion Rate & SLA Momentum (2026)</h2>
+          <p class="subtitle">Automated ISO-week performance tracking across active filters</p>
+          <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+        </div>
+        <div class="panel">
+          <h2>Operational Delay Root-Cause Pareto</h2>
+          <p class="subtitle">Hours lost by root cause + cumulative Pareto share (%)</p>
+          <div class="chart-wrap"><canvas id="paretoChart"></canvas></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Departmental Completion Rate vs. Target</h2>
+        <p class="subtitle">Actual completion and SLA compliance benchmarked against departmental SLA targets</p>
+        <div class="chart-wrap"><canvas id="deptChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: DEPARTMENTS -->
+    <div class="section" id="tab-departments">
+      <div class="panel">
+        <h2>Departmental KPI Scorecard (Actuals vs. Targets)</h2>
+        <p class="subtitle">RAG status highlights workflow gaps requiring leadership intervention</p>
+        <div style="overflow-x:auto;">
+          <table id="deptTable">
+            <thead>
+              <tr>
+                <th>Department</th><th>Dept Head</th><th class="num">Tasks</th><th class="num">Completed</th>
+                <th class="num">Completion %</th><th class="num">Target %</th><th class="num">Variance</th>
+                <th class="num">SLA %</th><th class="num">Avg TAT (h)</th><th class="num">Delay Hrs</th><th>RAG</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: EMPLOYEES -->
+    <div class="section" id="tab-employees">
+      <div class="panel">
+        <h2>Employee Performance & Composite Productivity Leaderboard (48 Staff)</h2>
+        <p class="subtitle">Productivity Index = 35% Completion + 30% SLA Compliance + 20% Quality + 15% First-Pass Yield</p>
+        <input class="search-input" id="empSearch" placeholder="Filter employee name, role, or department..." />
+        <div style="overflow-x:auto;">
+          <table id="empTable">
+            <thead>
+              <tr>
+                <th class="num">Rank</th><th>Employee</th><th>Department</th><th>Role</th>
+                <th class="num">Tasks</th><th class="num">Completion %</th><th class="num">SLA %</th>
+                <th class="num">Avg TAT (h)</th><th class="num">Quality</th><th class="num">Prod. Index</th><th>Tier</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: MILESTONES -->
+    <div class="section" id="tab-milestones">
+      <div class="panel">
+        <h2>Overdue & At-Risk Milestones Escalation Queue</h2>
+        <p class="subtitle">Prioritized by severity and days past planned due date</p>
+        <div style="overflow-x:auto;">
+          <table id="msTable">
+            <thead>
+              <tr>
+                <th>ID</th><th>Milestone</th><th>Department</th><th>Owner</th><th>Priority</th>
+                <th>Planned Due</th><th>Status</th><th class="num">% Done</th><th class="num">Open Delayed</th><th>Blocker Summary</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    OpsPulse — Built by Madhesh Srinivasan (2026) · MS Excel · Google Sheets · Power BI · SQL
+  </footer>
+
+  <script src="./data.js"></script>
+  <script>
+    const D = window.OPSPULSE_DATA;
+    const fDept = document.getElementById('fDept');
+    const fQuarter = document.getElementById('fQuarter');
+    const fPriority = document.getElementById('fPriority');
+    const empSearch = document.getElementById('empSearch');
+
+    D.departments.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.department_name;
+      opt.textContent = d.department_name;
+      fDept.appendChild(opt);
+    });
+
+    const deptTargetMap = Object.fromEntries(D.departments.map(d => [d.department_name, d.target_completion_pct]));
+    let weeklyChart, paretoChart, deptChart;
+
+    function getFilteredTasks() {
+      return D.tasks_slim.filter(t =>
+        (fDept.value === 'ALL' || t.department_name === fDept.value) &&
+        (fQuarter.value === 'ALL' || t.quarter === fQuarter.value) &&
+        (fPriority.value === 'ALL' || t.priority === fPriority.value)
+      );
+    }
+
+    function renderKPIs(tasks) {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.is_completed === 1);
+      const compRate = total ? (100 * completed.length / total) : 0;
+      const slaMet = completed.filter(t => t.is_sla_met === 1).length;
+      const slaRate = completed.length ? (100 * slaMet / completed.length) : 0;
+      const avgTat = completed.length ? (completed.reduce((s, t) => s + Number(t.turnaround_hours || 0), 0) / completed.length) : 0;
+      const totalDelay = tasks.reduce((s, t) => s + Number(t.delay_hours || 0), 0);
+      const overdueCount = tasks.filter(t => t.status === 'Overdue' || t.status === 'Blocked').length;
+      const escMilestones = D.milestones.filter(m =>
+        (fDept.value === 'ALL' || m.department_name === fDept.value) &&
+        (fQuarter.value === 'ALL' || m.quarter === fQuarter.value)
+      ).length;
+
+      const cards = [
+        { label: 'Total Tasks', val: total.toLocaleString(), sub: `${completed.length.toLocaleString()} completed`, cls: '' },
+        { label: 'Completion Rate', val: `${compRate.toFixed(1)}%`, sub: `Target benchmark: 88.0%`, cls: compRate >= 88 ? 'green' : (compRate >= 82 ? 'amber' : 'red') },
+        { label: 'SLA Compliance', val: `${slaRate.toFixed(1)}%`, sub: `${slaMet.toLocaleString()} within SLA`, cls: slaRate >= 82 ? 'green' : 'amber' },
+        { label: 'Avg Turnaround', val: `${avgTat.toFixed(1)}h`, sub: 'Completed tasks mean', cls: '' },
+        { label: 'Delay Hours Lost', val: `${totalDelay.toLocaleString(undefined, { maximumFractionDigits: 0 })}h`, sub: `${overdueCount} overdue / blocked`, cls: 'amber' },
+        { label: 'Milestone Escalations', val: escMilestones, sub: 'Overdue or At Risk', cls: escMilestones > 0 ? 'red' : 'green' },
+      ];
+
+      document.getElementById('kpiCards').innerHTML = cards.map(c => `
+        <div class="kpi-card ${c.cls}">
+          <div class="kpi-label">${c.label}</div>
+          <div class="kpi-value">${c.val}</div>
+          <div class="kpi-sub">${c.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderCharts(tasks) {
+      // 1. Weekly Trend
+      const byWeek = {};
+      tasks.forEach(t => {
+        const w = byWeek[t.week_label] || (byWeek[t.week_label] = { total: 0, comp: 0, sla: 0 });
+        w.total++;
+        if (t.is_completed) { w.comp++; if (t.is_sla_met) w.sla++; }
+      });
+      const weeks = Object.keys(byWeek).sort();
+      const compSeries = weeks.map(k => +(100 * byWeek[k].comp / byWeek[k].total).toFixed(1));
+      const slaSeries = weeks.map(k => byWeek[k].comp ? +(100 * byWeek[k].sla / byWeek[k].comp).toFixed(1) : 0);
+
+      if (weeklyChart) weeklyChart.destroy();
+      weeklyChart = new Chart(document.getElementById('weeklyChart'), {
+        type: 'line',
+        data: {
+          labels: weeks,
+          datasets: [
+            { label: 'Completion %', data: compSeries, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,0.1)', fill: true, tension: 0.3, pointRadius: 2 },
+            { label: 'SLA Compliance %', data: slaSeries, borderColor: '#10b981', borderDash: [5, 4], tension: 0.3, pointRadius: 2 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 50, max: 100 } } }
+      });
+
+      // 2. Delay Pareto
+      const byReason = {};
+      tasks.forEach(t => {
+        if (t.delay_hours > 0 && t.delay_reason !== 'None') {
+          byReason[t.delay_reason] = (byReason[t.delay_reason] || 0) + Number(t.delay_hours);
+        }
+      });
+      const sortedReasons = Object.entries(byReason).sort((a, b) => b[1] - a[1]);
+      const sumDelays = sortedReasons.reduce((s, r) => s + r[1], 0) || 1;
+      let running = 0;
+      const cumPct = sortedReasons.map(r => { running += r[1]; return +(100 * running / sumDelays).toFixed(1); });
+
+      if (paretoChart) paretoChart.destroy();
+      paretoChart = new Chart(document.getElementById('paretoChart'), {
+        data: {
+          labels: sortedReasons.map(r => r[0]),
+          datasets: [
+            { type: 'bar', label: 'Delay Hours', data: sortedReasons.map(r => +r[1].toFixed(1)), backgroundColor: '#2563eb', borderRadius: 5, yAxisID: 'y' },
+            { type: 'line', label: 'Cumulative %', data: cumPct, borderColor: '#ef4444', tension: 0.25, yAxisID: 'y1' }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          scales: { y: { beginAtZero: true }, y1: { position: 'right', min: 0, max: 105, grid: { drawOnChartArea: false } } }
+        }
+      });
+
+      // 3. Department Comparison
+      const byDept = {};
+      tasks.forEach(t => {
+        const g = byDept[t.department_name] || (byDept[t.department_name] = { total: 0, comp: 0, sla: 0 });
+        g.total++;
+        if (t.is_completed) { g.comp++; if (t.is_sla_met) g.sla++; }
+      });
+      const deptNames = Object.keys(byDept).sort();
+      if (deptChart) deptChart.destroy();
+      deptChart = new Chart(document.getElementById('deptChart'), {
+        type: 'bar',
+        data: {
+          labels: deptNames,
+          datasets: [
+            { label: 'Completion %', data: deptNames.map(n => +(100 * byDept[n].comp / byDept[n].total).toFixed(1)), backgroundColor: '#2563eb', borderRadius: 4 },
+            { label: 'SLA Compliance %', data: deptNames.map(n => byDept[n].comp ? +(100 * byDept[n].sla / byDept[n].comp).toFixed(1) : 0), backgroundColor: '#0ea5e9', borderRadius: 4 },
+            { label: 'Target %', data: deptNames.map(n => deptTargetMap[n] || 88), backgroundColor: '#cbd5e1', borderRadius: 4 }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 55, max: 100 } } }
+      });
+    }
+
+    function renderStaticTables() {
+      // Departments table
+      document.querySelector('#deptTable tbody').innerHTML = D.departments
+        .filter(d => fDept.value === 'ALL' || d.department_name === fDept.value)
+        .map(d => {
+          const ragCls = d.rag_status === 'Green' ? 'green' : (d.rag_status === 'Amber' ? 'amber' : 'red');
+          const sign = d.completion_variance_pct >= 0 ? '+' : '';
+          return `<tr>
+            <td><strong>${d.department_name}</strong></td>
+            <td>${d.department_head}</td>
+            <td class="num">${d.total_tasks}</td>
+            <td class="num">${d.completed_tasks}</td>
+            <td class="num"><strong>${d.completion_rate_pct.toFixed(1)}%</strong></td>
+            <td class="num">${d.target_completion_pct.toFixed(1)}%</td>
+            <td class="num">${sign}${d.completion_variance_pct.toFixed(1)}%</td>
+            <td class="num">${d.sla_compliance_pct.toFixed(1)}%</td>
+            <td class="num">${d.avg_turnaround_hrs.toFixed(1)}</td>
+            <td class="num">${d.total_delay_hrs.toFixed(1)}</td>
+            <td><span class="badge ${ragCls}">${d.rag_status}</span></td>
+          </tr>`;
+        }).join('');
+
+      // Employees table
+      const q = (empSearch.value || '').toLowerCase();
+      document.querySelector('#empTable tbody').innerHTML = D.employees
+        .filter(e =>
+          (fDept.value === 'ALL' || e.department_name === fDept.value) &&
+          (!q || e.full_name.toLowerCase().includes(q) || e.role_title.toLowerCase().includes(q) || e.department_name.toLowerCase().includes(q))
+        )
+        .map(e => {
+          const tierCls = e.performance_tier === 'Top Performer' ? 'green' :
+                          e.performance_tier === 'Exceeds Target' ? 'blue' :
+                          e.performance_tier === 'On Track' ? 'amber' : 'red';
+          return `<tr>
+            <td class="num"><strong>#${e.org_rank}</strong></td>
+            <td><strong>${e.full_name}</strong></td>
+            <td>${e.department_name}</td>
+            <td>${e.role_title}</td>
+            <td class="num">${e.total_tasks}</td>
+            <td class="num">${e.completion_rate_pct.toFixed(1)}%</td>
+            <td class="num">${e.sla_compliance_pct.toFixed(1)}%</td>
+            <td class="num">${e.avg_turnaround_hrs.toFixed(1)}</td>
+            <td class="num">${e.avg_quality_score.toFixed(2)}</td>
+            <td class="num"><strong>${e.productivity_index.toFixed(1)}</strong></td>
+            <td><span class="badge ${tierCls}">${e.performance_tier}</span></td>
+          </tr>`;
+        }).join('');
+
+      // Milestones table
+      document.querySelector('#msTable tbody').innerHTML = D.milestones
+        .filter(m =>
+          (fDept.value === 'ALL' || m.department_name === fDept.value) &&
+          (fQuarter.value === 'ALL' || m.quarter === fQuarter.value)
+        )
+        .map(m => {
+          const stCls = m.status === 'Overdue' ? 'red' : 'amber';
+          const prCls = m.priority === 'Critical' ? 'red' : (m.priority === 'High' ? 'amber' : 'blue');
+          return `<tr>
+            <td><strong>${m.milestone_id}</strong></td>
+            <td><strong>${m.milestone_name}</strong></td>
+            <td>${m.department_name}</td>
+            <td>${m.owner_name}</td>
+            <td><span class="badge ${prCls}">${m.priority}</span></td>
+            <td>${m.planned_due_date}</td>
+            <td><span class="badge ${stCls}">${m.status}</span></td>
+            <td class="num">${m.completion_pct.toFixed(0)}%</td>
+            <td class="num">${m.open_delayed_tasks}</td>
+            <td>${m.blocker_summary}</td>
+          </tr>`;
+        }).join('');
+    }
+
+    function updateAll() {
+      const tasks = getFilteredTasks();
+      renderKPIs(tasks);
+      renderCharts(tasks);
+      renderStaticTables();
+    }
+
+    [fDept, fQuarter, fPriority].forEach(el => el.addEventListener('change', updateAll));
+    empSearch.addEventListener('input', renderStaticTables);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      fDept.value = 'ALL'; fQuarter.value = 'ALL'; fPriority.value = 'ALL'; empSearch.value = '';
+      updateAll();
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    updateAll();
+  </script>
+</body>
+</html>

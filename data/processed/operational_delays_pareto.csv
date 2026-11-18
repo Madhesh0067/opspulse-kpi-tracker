@@ -1,0 +1,7 @@
+delay_reason,delayed_task_count,total_delay_hrs,avg_delay_hrs,critical_tasks_impacted,share_of_delay_hrs_pct,cumulative_share_pct
+Dependency Wait,169,6505.3,38.49,22,24.01,24.01
+Approval Lag,157,6255.5,39.84,16,23.09,47.11
+Resource Bottleneck,162,5401.8,33.34,37,19.94,67.05
+Vendor Delay,113,4061.3,35.94,14,14.99,82.04
+Scope Creep,93,3311.3,35.61,13,12.22,94.27
+Tooling Issue,50,1553.5,31.07,11,5.73,100.0
